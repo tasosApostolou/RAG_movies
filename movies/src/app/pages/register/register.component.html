@@ -1,0 +1,61 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <a routerLink="/" class="back-link">← Back to home</a>
+
+    <h1>Create account</h1>
+
+    <p class="subtitle">
+      Create an account to use the movie RAG search app.
+    </p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <label>
+        Full name
+        <input
+          type="text"
+          formControlName="full_name"
+          placeholder="Tasos Apostolou"
+        />
+      </label>
+
+      <label>
+        Email
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+        />
+      </label>
+
+      @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+        <p class="field-error">Please enter a valid email.</p>
+      }
+
+      <label>
+        Password
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="At least 8 characters"
+        />
+      </label>
+
+      @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
+        <p class="field-error">Password must be at least 8 characters.</p>
+      }
+
+      @if (errorMessage) {
+        <p class="error-box">{{ errorMessage }}</p>
+      }
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Creating account...' : 'Sign up' }}
+      </button>
+    </form>
+
+    <p class="switch-page">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+  </section>
+</main>

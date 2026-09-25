@@ -1,0 +1,136 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Recommendations</p>
+      <h1>Recommended Movies</h1>
+      <p class="subtitle">
+        Personalized movie recommendations based on your profile and favorite movies.
+      </p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-box">{{ errorMessage }}</div>
+  }
+
+  @if (successMessage) {
+    <div class="success-box">{{ successMessage }}</div>
+  }
+
+  <div class="table-card">
+    @if (isLoading) {
+      <p class="muted">Loading recommendations...</p>
+    }
+
+    @if (!isLoading) {
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Title</th>
+            <th>Director</th>
+            <th>Year</th>
+            <th>Score</th>
+            <th>Plot</th>
+            <th>Favorite</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (movie of recommendations; track movie.id) {
+            <tr>
+              <td class="rank-cell">#{{ movie.rank }}</td>
+
+              <td class="title-cell">
+                {{ movie.title }}
+
+                @if (movie.cast) {
+                  <small>Cast: {{ movie.cast }}</small>
+                }
+              </td>
+
+              <td>{{ movie.director || '-' }}</td>
+              <td>{{ movie.year || '-' }}</td>
+
+              <td>
+                {{ movie.score | number: '1.2-4' }}
+              </td>
+
+              <td>
+                <button
+                  type="button"
+                  class="small-btn"
+                  (click)="openPlot(movie)"
+                >
+                  plot +
+                </button>
+              </td>
+
+              <td>
+                <button
+                  type="button"
+                  class="favorite-btn"
+                  (click)="addToFavorites(movie)"
+                  [disabled]="addingFavoriteMovieId === movie.id"
+                >
+                  {{ addingFavoriteMovieId === movie.id ? '...' : 'Favorite' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (recommendations.length === 0) {
+        <div class="empty-state">
+          <h2>No recommendations yet</h2>
+
+          <p>
+            Add movies to your favorites first. Then the system can generate recommendations.
+          </p>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="pagination">
+    <span>
+      Showing {{ pageStart }} - {{ pageEnd }} of {{ count }}
+    </span>
+
+    <div>
+      <button type="button" (click)="previousPage()" [disabled]="skip === 0">
+        Previous
+      </button>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="skip + limit >= count"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  @if (selectedMovieForPlot) {
+    <div class="dialog-backdrop" (click)="closePlot()">
+      <article class="dialog" (click)="$event.stopPropagation()">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Recommended movie plot</p>
+            <h2>{{ selectedMovieForPlot.title }}</h2>
+          </div>
+
+          <button type="button" class="close-btn" (click)="closePlot()">
+            ×
+          </button>
+        </div>
+
+        <p class="plot-text">
+          {{ selectedMovieForPlot.plot || 'No plot available.' }}
+        </p>
+      </article>
+    </div>
+  }
+</section>

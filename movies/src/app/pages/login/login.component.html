@@ -1,0 +1,52 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <a routerLink="/" class="back-link">← Back to home</a>
+
+    <h1>Login</h1>
+
+    <p class="subtitle">
+      Sign in to start searching movies with semantic AI search.
+    </p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <label>
+        Email
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+        />
+      </label>
+
+      @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+        <p class="field-error">Please enter a valid email.</p>
+      }
+
+      <label>
+        Password
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Your password"
+        />
+      </label>
+
+      @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+        <p class="field-error">Password is required.</p>
+      }
+
+      @if (errorMessage) {
+        <p class="error-box">{{ errorMessage }}</p>
+      }
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+
+    <p class="switch-page">
+      No account?
+      <a routerLink="/register">Create one</a>
+    </p>
+  </section>
+</main>

@@ -1,0 +1,233 @@
+services:
+
+  # ============================================================
+  # 1. MySQL Database
+  # ============================================================
+
+  db:
+    image: mysql:8.0
+    restart: always
+
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  # ============================================================
+  # 2. FastAPI Backend
+  # ============================================================
+
+  web:
+    build:
+      context: ./movies_semantic_plot
+      dockerfile: Dockerfile
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    environment:
+      - MYSQL_HOST=db
+
+    volumes:
+      - ./movies_semantic_plot:/app
+
+    depends_on:
+      - db
+
+
+  # ============================================================
+  # 3. Angular Frontend
+  # ============================================================
+
+  frontend:
+    build:
+      context: ./movies
+      dockerfile: Dockerfile
+
+    ports:
+      - "4200:4200"
+
+    volumes:
+      - ./movies:/app
+      - /app/node_modules
+
+    depends_on:
+      - web
+
+
+  # ============================================================
+  # 4. Create Chroma Vectorstore
+  # Τρέχει μόνο όταν το καλέσουμε
+  # ============================================================
+
+  create_vectorstore:
+    build:
+      context: ./movies_semantic_plot
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+
+    environment:
+      - MYSQL_HOST=db
+
+    volumes:
+      - ./movies_semantic_plot:/app
+
+    entrypoint:
+      [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "app.scripts.create_vectorstore"
+      ]
+
+    profiles:
+      - tools
+
+
+  # ============================================================
+  # 5. Import Movies
+  # Τρέχει μόνο όταν το καλέσουμε
+  # ============================================================
+
+  import_movies:
+    build:
+      context: ./movies_semantic_plot
+      dockerfile: Dockerfile
+
+    env_file:
+      - .env
+
+    environment:
+      - MYSQL_HOST=db
+
+    volumes:
+      - ./movies_semantic_plot:/app
+
+    entrypoint:
+      [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "app.scripts.import_movies"
+      ]
+
+    profiles:
+      - tools
+
+
+# ============================================================
+# Persistent volumes
+# ============================================================
+
+volumes:
+  mysql_data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# version: '3.8'
+
+# services:
+#   # 1. Η Βάση Δεδομένων MySQL (Αυτόνομη μέσα στο Docker)
+#   db:
+#     image: mysql:8.0
+#     restart: always
+#     environment:
+#      #Docker read τις values directly from .env file.
+#       MYSQL_DATABASE: ${MYSQL_DB}
+#       MYSQL_USER: ${MYSQL_USER}
+#       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+#     ports:
+#       - "3306:3306"  # if exists local MySQL running, change it with "3307:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+
+#   # 2. FastAPI
+#   web:
+#     build: .
+#     ports:
+#       - "8000:8000"
+#     env_file:
+#       - .env  # Διαβάζει το local .env (με MYSQL_HOST=127.0.0.1)
+#     environment:
+#       - MYSQL_HOST=db  # Κάνει overwrite ώστε ΜΕΣΑ στο Docker να βλέπει τη βάση "db"
+#     volumes:
+#       - .:/app  # Live sync όλου του project (Κώδικας + Ορατή Chroma DB)
+#     depends_on:
+#       - db
+
+#   # 3. Το Script για το Chunking (Τρέχει ΜΟΝΟ όταν το καλεσουμε)
+#   chunking:
+#     build: .
+#     env_file:
+#       - .env
+#     environment:
+#       - MYSQL_HOST=db
+#     volumes:
+#       - .:/app  # Live sync για να γραφτεί η Chroma DB στον υπολογιστή
+#     entrypoint: ["uv", "run", "python", "-m", "app.scripts.create_vectorstore"]
+#     profiles:
+#       - tools  # Εμποδίζει το script από το να τρέξει αυτόματα
+
+#   import_movies:
+#     build: .
+#     env_file:
+#       - .env
+#     environment:
+#       - MYSQL_HOST=db  # Για να βρει τη MySQL μέσα στο Docker
+#     volumes:
+#      - .:/app  # Live sync του κώδικα
+#     entrypoint: ["uv", "run", "python", "-m", "app.scripts.import_movies"]
+#     profiles:
+#       - tools  
+        
+
+# volumes:
+#   mysql_data:  # Εδώ το Docker κρατάει τα δεδομένα της MySQL ασφαλή
+
+

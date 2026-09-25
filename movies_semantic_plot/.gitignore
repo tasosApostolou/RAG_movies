@@ -1,0 +1,29 @@
+# Virtual Environment
+venv/
+.venv/
+myenv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+*__pycache__/
+
+# Pytest
+.pytest_cache/
+
+# Environment variables
+.env
+
+# SQLite database
+*.db
+
+# VSCode
+.vscode/
+
+app/chroma_movies_db/
+app/chroma_db/
+
+# macOS
+.DS_Store
+

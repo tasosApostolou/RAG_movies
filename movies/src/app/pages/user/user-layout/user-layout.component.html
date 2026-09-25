@@ -1,0 +1,38 @@
+<main class="user-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">🎬</span>
+
+      <div>
+        <h2>Movie RAG</h2>
+        <p>User panel</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/user/movies" routerLinkActive="active">
+        Search Movies
+      </a>
+
+      <a routerLink="/user/ask-ai" routerLinkActive="active">
+        Ask AI
+      </a>
+
+      <a routerLink="/user/recommendations" routerLinkActive="active">
+        Recommendations
+      </a>
+
+      <a routerLink="/user/favorites" routerLinkActive="active">
+        Favorites
+      </a>
+    </nav>
+
+    <button type="button" class="logout-btn" (click)="logout()">
+      Logout
+    </button>
+  </aside>
+
+  <section class="content">
+    <router-outlet></router-outlet>
+  </section>
+</main>

@@ -1,0 +1,160 @@
+.page {
+  max-width: 980px;
+  display: grid;
+  gap: 22px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #ffb3b3;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+h1 {
+  margin: 0;
+  font-size: 38px;
+}
+
+.subtitle {
+  color: #cfcfcf;
+}
+
+.movie-form {
+  display: grid;
+  gap: 18px;
+  padding: 26px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+}
+
+input,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 13px 15px;
+  background: rgba(0, 0, 0, 0.35);
+  color: white;
+  outline: none;
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #e50914;
+}
+
+.genres-section {
+  display: grid;
+  gap: 12px;
+}
+
+.genres-section h3 {
+  margin: 0;
+}
+
+.genres-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.genre-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.genre-option input {
+  width: auto;
+}
+
+.submit-btn,
+.secondary-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 13px 18px;
+  background: #e50914;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-box,
+.success-box {
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
+.error-box {
+  background: rgba(229, 9, 20, 0.18);
+  color: #ffb3b3;
+  border: 1px solid rgba(229, 9, 20, 0.35);
+}
+
+.success-box {
+  background: rgba(48, 180, 95, 0.16);
+  color: #a9ffca;
+  border: 1px solid rgba(48, 180, 95, 0.35);
+}
+
+.field-error {
+  margin: -10px 0 0;
+  color: #ffb3b3;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .page-header,
+  .grid-2 {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .genres-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

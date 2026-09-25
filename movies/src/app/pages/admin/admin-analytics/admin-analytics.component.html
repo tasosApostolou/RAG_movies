@@ -1,0 +1,142 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Analytics</p>
+      <h1>Usage & Cost</h1>
+    </div>
+
+    <div class="filters">
+      <input type="date" [(ngModel)]="dateFrom"  />
+      <input type="date" [(ngModel)]="dateTo" />
+
+      <button type="button" (click)="applyDateFilter()">Apply</button>
+      <button type="button" class="secondary-btn" (click)="clearDateFilter()">
+        Clear
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-box">{{ errorMessage }}</div>
+  }
+
+  @if (isLoading) {
+    <p class="muted">Loading analytics...</p>
+  }
+
+  @if (summary) {
+    <section class="summary-grid">
+      <article class="metric-card">
+        <span>Total Requests</span>
+        <strong>{{ summary.total_requests | number }}</strong>
+      </article>
+
+      <article class="metric-card">
+        <span>Total Tokens</span>
+        <strong>{{ summary.total_tokens | number }}</strong>
+      </article>
+
+      <article class="metric-card">
+        <span>Input Tokens</span>
+        <strong>{{ summary.total_input_tokens | number }}</strong>
+      </article>
+
+      <article class="metric-card">
+        <span>Output Tokens</span>
+        <strong>{{ summary.total_output_tokens | number }}</strong>
+      </article>
+
+      <article class="metric-card highlight">
+        <span>Total Cost</span>
+        <strong>{{ summary.total_cost | currency: 'USD':  'symbol': '1.2-4'  }}</strong>
+      </article>
+    </section>
+  }
+
+  <section class="table-card">
+    <h2>Daily Usage</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Requests</th>
+          <th>Input Tokens</th>
+          <th>Output Tokens</th>
+          <th>Total Tokens</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of dailyUsage; track row.day) {
+          <tr>
+            <td>{{ row.day }}</td>
+            <td>{{ row.requests | number }}</td>
+            <td>{{ row.input_tokens | number }}</td>
+            <td>{{ row.output_tokens | number }}</td>
+            <td>{{ row.total_tokens | number }}</td>
+            <td>{{ row.cost | currency: 'USD':  'symbol': '1.4-4'  }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (dailyUsage.length === 0) {
+      <p class="muted empty">No daily usage found.</p>
+    }
+  </section>
+
+  <section class="table-card">
+    <h2>Usage by Session</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Session</th>
+          <th>Owner</th>
+          <th>Requests</th>
+          <th>Total Tokens</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of sessionUsage; track row.session_id) {
+          <tr>
+            <td>
+              <strong>{{ row.title }}</strong>
+              <small>{{ row.session_id }}</small>
+            </td>
+            <td>{{ row.owner_id }}</td>
+            <td>{{ row.requests | number }}</td>
+            <td>{{ row.total_tokens | number }}</td>
+            <td>{{ row.cost | currency: 'USD':  'symbol': '1.2-4' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (sessionUsage.length === 0) {
+      <p class="muted empty">No session usage found.</p>
+    }
+
+    <div class="pagination">
+      <button
+        type="button"
+        (click)="previousSessionPage()"
+        [disabled]="sessionSkip === 0"
+      >
+        Previous
+      </button>
+
+      <button
+        type="button"
+        (click)="nextSessionPage()"
+        [disabled]="sessionSkip + sessionLimit >= sessionCount"
+      >
+        Next
+      </button>
+    </div>
+  </section>
+</section>

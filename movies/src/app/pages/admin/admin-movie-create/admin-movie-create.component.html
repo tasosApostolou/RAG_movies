@@ -1,0 +1,98 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Ingestion</p>
+      <h1>Add Movie</h1>
+      <p class="subtitle">
+        Create a movie in MySQL and ingest its plot into ChromaDB.
+      </p>
+    </div>
+
+    <button type="button" class="secondary-btn" (click)="goToMovies()">
+      Back to movies
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-box">{{ errorMessage }}</div>
+  }
+
+  @if (successMessage) {
+    <div class="success-box">{{ successMessage }}</div>
+  }
+
+  <form class="movie-form" [formGroup]="movieForm" (ngSubmit)="onSubmit()">
+    <div class="grid-2">
+      <label>
+        Title *
+        <input type="text" formControlName="title" placeholder="Movie title" />
+      </label>
+
+      <label>
+        Year
+        <input type="number" formControlName="year" placeholder="1995" />
+      </label>
+    </div>
+
+    @if (movieForm.controls.title.touched && movieForm.controls.title.invalid) {
+      <p class="field-error">Title is required.</p>
+    }
+
+    <label>
+      Director
+      <input type="text" formControlName="director" placeholder="Director name" />
+    </label>
+
+    <div class="grid-2">
+      <label>
+        IMDb ID
+        <input type="text" formControlName="imdb_id" placeholder="tt0114709" />
+      </label>
+
+      <label>
+        TMDb ID
+        <input type="number" formControlName="tmdb_id" placeholder="862" />
+      </label>
+    </div>
+
+    <label>
+      Poster URL
+      <input type="text" formControlName="poster_url" placeholder="https://..." />
+    </label>
+
+    <section class="genres-section">
+      <h3>Genres</h3>
+
+      <div class="genres-grid">
+        @for (genre of genres; track genre.id) {
+          <label class="genre-option">
+            <input
+              type="checkbox"
+              [checked]="isGenreSelected(genre.id)"
+              (change)="onGenreToggle(genre.id, $event)"
+            />
+
+            <span>{{ genre.name }}</span>
+          </label>
+        }
+      </div>
+    </section>
+
+    <label>
+      Plot *
+      <textarea
+        rows="10"
+        formControlName="plot"
+        placeholder="Write the movie plot..."
+      ></textarea>
+    </label>
+
+    @if (movieForm.controls.plot.touched && movieForm.controls.plot.invalid) {
+      <p class="field-error">Plot is required.</p>
+    }
+
+    <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Creating and ingesting...' : 'Create & Ingest Movie' }}
+    </button>
+  </form>
+</section>

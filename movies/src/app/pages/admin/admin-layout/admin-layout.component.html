@@ -1,0 +1,41 @@
+<main class="admin-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">🎬</span>
+      <div>
+        <h2>Movie Admin</h2>
+        <p>RAG Management</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Dashboard
+      </a>
+
+      <a routerLink="/admin/movies" routerLinkActive="active">
+        Movies
+      </a>
+
+      <a routerLink="/admin/movies/new" routerLinkActive="active">
+        Add Movie
+      </a>
+
+      <a routerLink="/admin/analytics" routerLinkActive="active">
+        Analytics
+      </a>
+    </nav>
+
+    <button type="button" class="logout-btn" (click)="logout()">
+      Logout
+    </button>
+  </aside>
+
+  <section class="content">
+    <router-outlet></router-outlet>
+  </section>
+</main>

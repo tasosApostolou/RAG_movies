@@ -1,0 +1,161 @@
+<section class="ask-ai-page">
+  <aside class="sessions-panel">
+    <div class="sessions-top">
+      <div>
+        <p class="eyebrow">Movie RAG</p>
+        <h2>Conversations</h2>
+      </div>
+
+      <button
+        type="button"
+        class="icon-new-btn"
+        (click)="createNewSearch()"
+        [disabled]="isCreatingSession"
+        title="New search"
+      >
+        +
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="new-search-btn"
+      (click)="createNewSearch()"
+      [disabled]="isCreatingSession"
+    >
+      {{ isCreatingSession ? 'Creating...' : '+ New Search' }}
+    </button>
+
+    @if (isLoadingSessions) {
+      <p class="muted">Loading sessions...</p>
+    }
+
+    @if (!isLoadingSessions && sessions.length === 0) {
+      <div class="empty-state">
+        <p>No conversations yet.</p>
+        <span>Create one to start asking the movie AI.</span>
+      </div>
+    }
+
+    <div class="sessions-list">
+      @for (session of sessions; track session.id) {
+        <div
+          class="session-item"
+          [class.active]="activeSession?.id === session.id"
+          (click)="selectSession(session.id)"
+        >
+          <div class="session-main">
+            <span class="session-title">{{ session.title }}</span>
+            <span class="session-date">
+              {{ session.created_at | date: 'short' }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="delete-session-btn"
+            title="Delete session"
+            (click)="deleteSession(session.id, $event)"
+            [disabled]="deletingSessionId === session.id"
+          >
+            {{ deletingSessionId === session.id ? '...' : '×' }}
+          </button>
+        </div>
+      }
+    </div>
+  </aside>
+
+  <section class="chat-panel">
+    <header class="chat-header">
+      <div>
+        <p class="eyebrow">Semantic movie discovery</p>
+
+        @if (activeSession) {
+          <h1>{{ activeSession.title }}</h1>
+          <p class="session-id">
+            {{ activeSession.id }}
+          </p>
+        } @else {
+          <h1>Ask Movie AI</h1>
+          <p class="session-id">
+            Create a conversation to search movie plots semantically.
+          </p>
+        }
+      </div>
+    </header>
+
+    @if (errorMessage) {
+      <div class="error-box">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <div class="chat-messages">
+      @if (!activeSession && !isLoadingConversation) {
+        <div class="welcome-card">
+          <h2>Start a movie conversation</h2>
+
+          <p>
+            Describe a movie by plot, mood, genre, atmosphere, theme, or even a vague memory.
+          </p>
+
+          <button
+            type="button"
+            class="primary-btn"
+            (click)="createNewSearch()"
+            [disabled]="isCreatingSession"
+          >
+            {{ isCreatingSession ? 'Creating...' : 'Create Search Session' }}
+          </button>
+        </div>
+      }
+
+      @if (isLoadingConversation) {
+        <div class="loading-card">
+          Loading conversation...
+        </div>
+      }
+
+      @if (activeSession && !isLoadingConversation) {
+        @for (message of messages; track $index) {
+          <div
+            class="message"
+            [class.user-message]="message.role === 'user'"
+            [class.assistant-message]="message.role === 'assistant'"
+          >
+            <div class="message-role">
+              {{ message.role === 'user' ? 'You' : 'Movie AI' }}
+            </div>
+
+            <div class="message-content">
+              {{ message.content }}
+            </div>
+          </div>
+        }
+
+        @if (isSendingMessage) {
+          <div class="message assistant-message">
+            <div class="message-role">Movie AI</div>
+            <div class="message-content">Searching movie plots...</div>
+          </div>
+        }
+      }
+    </div>
+
+    <form class="chat-form" [formGroup]="chatForm" (ngSubmit)="sendMessage()">
+      <input
+        type="text"
+        formControlName="message"
+        placeholder="Describe the movie you are looking for..."
+        [disabled]="!activeSession || isSendingMessage || isLoadingConversation"
+      />
+
+      <button
+        type="submit"
+        [disabled]="!activeSession || isSendingMessage || isLoadingConversation"
+      >
+        Send
+      </button>
+    </form>
+  </section>
+</section>

@@ -1,0 +1,48 @@
+.admin-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, rgba(229, 9, 20, 0.22), transparent 34%),
+    linear-gradient(135deg, #080808, #141414 55%, #210b0b);
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin-card {
+  width: min(100%, 620px);
+  padding: 36px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #ffb3b3;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 42px;
+}
+
+p {
+  color: #d0d0d0;
+  line-height: 1.6;
+}
+
+button {
+  margin-top: 20px;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 22px;
+  background: #e50914;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}

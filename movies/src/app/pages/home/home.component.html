@@ -1,0 +1,81 @@
+<main class="home-page">
+  <nav class="navbar">
+    <div class="brand">
+      <span class="brand-icon">🎬</span>
+      <span>Movie Semantic Search</span>
+    </div>
+
+    <div class="nav-actions">
+      <a routerLink="/login" class="nav-link">Login</a>
+      <a routerLink="/register" class="btn btn-small">Sign up</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">AI-powered movie discovery</p>
+
+      <h1>Describe the movie you want. Find it semantically.</h1>
+
+      <p class="subtitle">
+        Search movies by meaning, mood, plot, theme, genre hints, or vague memories.
+        The app uses embeddings and ChromaDB to retrieve movie descriptions similar
+        to your query.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/login" class="btn">Start searching</a>
+        <a routerLink="/register" class="btn btn-secondary">Create account</a>
+      </div>
+    </div>
+
+    <div class="demo-card">
+      <p class="demo-label">Example query</p>
+
+      <div class="query-box">
+        “A dark sci-fi movie where reality may be fake and the hero discovers
+        a hidden system controlling people.”
+      </div>
+
+      <div class="result-preview">
+        <div class="movie-row">
+          <span class="score">0.92</span>
+          <span>The Matrix</span>
+        </div>
+
+        <div class="movie-row">
+          <span class="score">0.87</span>
+          <span>Dark City</span>
+        </div>
+
+        <div class="movie-row">
+          <span class="score">0.81</span>
+          <span>They Live</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <article>
+      <h3>Semantic search</h3>
+      <p>
+        Search by meaning instead of exact keywords.
+      </p>
+    </article>
+
+    <article>
+      <h3>Movie plot embeddings</h3>
+      <p>
+        Movie descriptions are embedded and stored in ChromaDB.
+      </p>
+    </article>
+
+    <article>
+      <h3>Personal search sessions</h3>
+      <p>
+        Login with JWT and later keep user-specific search history.
+      </p>
+    </article>
+  </section>
+</main>

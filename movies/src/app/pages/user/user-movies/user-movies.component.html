@@ -1,0 +1,123 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Search movies</p>
+      <h1>Movie Database</h1>
+    </div>
+
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="q"
+        placeholder="Search by title..."
+        (keyup.enter)="search()"
+      />
+
+      <button type="button" (click)="search()">Search</button>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-box">{{ errorMessage }}</div>
+  }
+
+  @if (successMessage) {
+    <div class="success-box">{{ successMessage }}</div>
+  }
+
+  <div class="table-card">
+    @if (isLoading) {
+      <p class="muted">Loading movies...</p>
+    }
+
+    @if (!isLoading) {
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Genres</th>
+            <th>Director</th>
+            <th>Year</th>
+            <th>Plot</th>
+            <th>Favorite</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (movie of movies; track movie.id) {
+            <tr>
+              <td class="title-cell">{{ movie.title }}</td>
+              <td>{{ getGenres(movie) || '-' }}</td>
+              <td>{{ movie.director || '-' }}</td>
+              <td>{{ movie.year || '-' }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="small-btn"
+                  (click)="openPlot(movie)"
+                >
+                  plot +
+                </button>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="favorite-btn"
+                  (click)="addToFavorites(movie)"
+                  [disabled]="addingFavoriteMovieId === movie.id"
+                >
+                  {{ addingFavoriteMovieId === movie.id ? '...' : 'Favorite' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (movies.length === 0) {
+        <p class="muted empty">No movies found.</p>
+      }
+    }
+  </div>
+
+  <div class="pagination">
+    <span>
+      Showing {{ pageStart }} - {{ pageEnd }} of {{ count }}
+    </span>
+
+    <div>
+      <button type="button" (click)="previousPage()" [disabled]="skip === 0">
+        Previous
+      </button>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="skip + limit >= count"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  @if (selectedMovieForPlot) {
+    <div class="dialog-backdrop" (click)="closePlot()">
+      <article class="dialog" (click)="$event.stopPropagation()">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Movie plot</p>
+            <h2>{{ selectedMovieForPlot.title }}</h2>
+          </div>
+
+          <button type="button" class="close-btn" (click)="closePlot()">
+            ×
+          </button>
+        </div>
+
+        <p class="plot-text">
+          {{ selectedMovieForPlot.plot || 'No plot available.' }}
+        </p>
+      </article>
+    </div>
+  }
+</section>

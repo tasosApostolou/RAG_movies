@@ -1,0 +1,7 @@
+**/chroma_movies_db/
+**/chroma_test_db/
+**/chroma_plot_db/
+.venv/
+myenv/
+.git/
+__pycache__
