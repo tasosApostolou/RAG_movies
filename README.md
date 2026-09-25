@@ -46,7 +46,7 @@
 
 Full-stack εφαρμογή αναζήτησης και εξερεύνησης ταινιών, η οποία συνδυάζει **Angular**, **FastAPI**, **MySQL**, **Chroma Vector Database** και τεχνικές **Generative AI / Retrieval-Augmented Generation (RAG)**.
 
-[Αναλυτικη περιγραφη](perigrafi_efarmogis_architektonikis.pdf)
+[Αναλυτικη περιγραφη σε PDF](perigrafi_efarmogis_architektonikis.pdf)
 
 
 Ο βασικός στόχος της εφαρμογής είναι να ξεπεράσει τους περιορισμούς μιας απλής keyword αναζήτησης. Εκτός από αναζήτηση με τίτλο, ο χρήστης μπορεί να περιγράψει σε φυσική γλώσσα το είδος ταινίας που ψάχνει, για παράδειγμα:
