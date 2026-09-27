@@ -236,8 +236,8 @@ After retrieval, another LLM receives all retrieved results, including synthetic
     Normal metadata filters such as genres, excluded_genres, director, and year
     are still applied to both retrieval passes if user explicit requests.    
 
-At this time i dont use doc_type filter for retrieve generated queries because usually are much retrieved first. At this time is an early implementation of my idea but still has significant room for improvement and future expansion. I dont have yet chunks but i could split plots into paragraphs which is too long descriptions (chunk-paragraph might be over than 2000 charachters and in future i could generate more simulated quries for each chunk-paragraph ant to increase a litle bit the temperature 0.2-0.3 with carefully prompting to recognize vibes,mood,emotion not just direct plot description, and also make evidence-reasoning by real plot paragraph generating score response. Additionaly i could generate tags as focus keywords or indicating mood,atmosphere,vibes. Then it might need more complex filter cases or rerank) as example of a future improvement expansion structured output:
-    reference to movie "The matrix":
+`At this time i dont use doc_type filter for retrieve generated queries because usually are much retrieved first. At this time is an early implementation of my idea but still has significant room for improvement and future expansion. I dont have yet chunks but i could split plots into paragraphs which is too long descriptions (chunk-paragraph might be over than 2000 charachters and in future i could generate more simulated quries for each chunk-paragraph ant to increase a litle bit the temperature 0.2-0.3 with carefully prompting to recognize vibes,mood,emotion not just direct plot description, and also make evidence-reasoning by real plot paragraph generating score response. Additionaly i could generate tags as focus keywords or indicating mood,atmosphere,vibes. Then it might need more complex filter cases or rerank) as example of a future improvement expansion structured output:
+    reference to movie "The matrix":`
 
 ```json
 [
