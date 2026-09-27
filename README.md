@@ -1,6 +1,5 @@
 # AI Movie Search
 
-
 ### Screenshots
 
 * **dystopia**
@@ -11,7 +10,6 @@
 
 * **existenz**
   ![existenz](videos%20&%20screenshots/existenz.png)
-
 
 * **conversation**
   ![conversation](videos%20&%20screenshots/conversation.png)
@@ -40,51 +38,48 @@
 * **scifi_philo**
   ![scifi_philo](videos%20&%20screenshots/scifi_philo.png)
 
+---
 
+A full-stack movie discovery application built with **Angular**, **FastAPI**, **MySQL**, **Chroma Vector Database**, and **Generative AI / Graph-RAG** techniques.
 
+[Detailed architecture and implementation description (PDF)](perigrafi_efarmogis_architektonikis.pdf)
 
+The main goal of the project is to go beyond traditional keyword-based movie search. In addition to searching by title, users can describe the kind of movie they are looking for in natural language, for example:
 
-Full-stack εφαρμογή αναζήτησης και εξερεύνησης ταινιών, η οποία συνδυάζει **Angular**, **FastAPI**, **MySQL**, **Chroma Vector Database** και τεχνικές **Generative AI / Retrieval-Augmented Generation (RAG)**.
+> "I want a dark movie set on an island."
 
-[Αναλυτικη περιγραφη σε PDF](perigrafi_efarmogis_architektonikis.pdf)
+> "A movie about space travel where time passes differently."
 
+> "Sci-fi detective movie with philosophical themes." *(genre-aware retrieval)*
 
-Ο βασικός στόχος της εφαρμογής είναι να ξεπεράσει τους περιορισμούς μιας απλής keyword αναζήτησης. Εκτός από αναζήτηση με τίτλο, ο χρήστης μπορεί να περιγράψει σε φυσική γλώσσα το είδος ταινίας που ψάχνει, για παράδειγμα:
+> "I want a dark sci-fi movie with philosophical themes and mystery."
 
-> «Θέλω μια σκοτεινή ταινία που εκτυλισεται σε νησι.»
- 
-> «Ταινία με διαστημικό ταξίδι όπου ο χρόνος κυλάει διαφορετικά»
+Instead of being limited to exact titles or genre labels, users can describe a desired **story, atmosphere, theme, style, or overall vibe**, and the system retrieves movies based plot-description semantic similarity.
 
-> «Sci-fi detective movie with philosophical themes"(κανει filter genre retrieve)»
+The application analyzes each request, builds a retrieval oriented semantic query, extracts relevant structured filters, and searches the vector database for semantically related movie content.
 
->Θέλω μια σκοτεινή sci-fi ταινία με φιλοσοφικό ύφος και μυστήριο. 
+## Core Features
 
-Ετσι ωστε ο χρήστης να μην περιορίζεται σε αναζητήσεις τύπου τίτλου ή genre, αλλά να μπορεί να περιγράφει ελεύθερα το είδος ιστορίας, ατμόσφαιρας ή θεματολογίας style, vibe που θέλει και το σύστημα να αναζητά τις πιο σχετικές ταινίες σημασιολογικά.
+The application provides:
 
-Το σύστημα αναλύει το αίτημα, δημιουργεί semantic query, εξάγει χρήσιμα φίλτρα και αναζητά σχετικές ταινίες στη vector database με βάση τη σημασιολογική ομοιότητα.
-
-## Βασικές λειτουργίες
-
-Η εφαρμογή υποστηρίζει:
-
-- Register και login χρηστών με **JWT authentication**.
-- Διαχωρισμό ρόλων **user / admin**.
-- Αναζήτηση ταινιών με βάση τον τίτλο από τη MySQL.
-- Προβολή πληροφοριών όπως title, year, director, genres και plot.
-- Προσθήκη και αφαίρεση αγαπημένων ταινιών.
-- Δημιουργία AI search/chat sessions με αποθηκευμένο ιστορικό.
-- Semantic αναζήτηση ταινιών μέσω **Chroma embeddings**.
-- Φιλτράρισμα με metadata όπως genre, excluded genre, director και year.
-- Παραγωγή τελικής απάντησης από LLM με βάση τα retrieved movie documents.
-- Admin διαχείριση ταινιών και συγχρονισμό τους με MySQL και Chroma.
-- Παρακολούθηση token usage και estimated AI cost.
-- Πειραματικό recommendation system με βάση ratings και favorites.
+- User registration and login with **JWT authentication**.
+- Role-based access for **regular users and administrators**.
+- Traditional movie-title search backed by MySQL.
+- Movie details including title, year, director, genres, and plot.
+- Add/remove favorite movies.
+- Persistent AI search chat sessions with conversation history.
+- Semantic movie search using **Chroma embeddings**.
+- Metadata-aware filtering by genre, excluded genre, director, and year.
+- LLM-generated answers grounded in retrieved movie documents.
+- Admin movie management with synchronization between MySQL and Chroma.
+- Token usage and estimated AI cost tracking.
+- An experimental recommendation system based on ratings and user favorites.
 
 ---
 
-## Αρχιτεκτονική
+## Application Architecture
 
-Η εφαρμογή ακολουθεί full-stack αρχιτεκτονική.
+The project follows a full-stack architecture in which the frontend communicates with a FastAPI backend through REST endpoints protected by JWT authentication.
 
 ```mermaid
 flowchart LR
@@ -98,24 +93,20 @@ flowchart LR
     C --> G[Users / Movies / Favorites / Sessions / History / Ratings]
     E --> H[Plots / Summaries / Semantic Queries / Metadata]
 ```
-Το **FastAPI backend**  διαχειριζεται το authentication, τα REST endpoints, την πρόσβαση στις βάσεις δεδομένων συνδιαζοντας σχεσιακη και vector db και την εκτέλεση του graph RAG workflow.
 
-Το **Angular frontend** διαχειρίζεται το UI, προφυλασει το authorization-authentication state, τα user/admin views και την επικοινωνία με το backend.
+The **FastAPI backend** handles authentication, REST endpoints, business logic, access to both relational and vector data stores, and execution of the RAG workflow.
 
+The **Angular frontend** provides the user interface, manages authentication state and role-specific views, and communicates with the backend through HTTP services and interceptors.
 
 ---
 
-## Αρχιτεκτονική Γραφου
+## LangGraph RAG Architecture
 
-Η εφαρμογή ακολουθεί full-stack αρχιτεκτονική.
+The AI layer is implemented as a **conditional LangGraph workflow**. The agent first decides whether the current user request actually requires retrieval.
 
-content = """# MovieRAG Agent Architecture
+If retrieval is needed, the request is routed through the semantic RAG pipeline. If the request can be answered from the existing conversation context, or is simply conversational, the retrieval pipeline is skipped and a direct answer is generated.
 
-> Agentic RAG workflow όπου ο agent αποφασίζει πρώτα αν χρειάζεται retrieval.
-> Αν απαιτείται retrieve, ακολουθεί semantic RAG pipeline· διαφορετικά απαντά απευθείας.
-> Με κάθε απαντηση του llm προς τον χρήστη ολοκληρώνεται ολοκληρος ο κύκλος του graph
-
-
+Each completed LLM response ends the current graph execution cycle.
 
 ```mermaid
 flowchart LR
@@ -143,7 +134,7 @@ flowchart LR
     class GA,GDA answer;
 ```
 
-## Flow
+### Execution Paths
 
 **Retrieval path**
 
@@ -153,41 +144,139 @@ flowchart LR
 
 `START → decide_retrieval → no_retrieval_needed → generate_direct_answer → END`
 
-### Retrieval logic
 
-Το `retrieve_movies` είναι ένας κόμβος του LangGraph, αλλά εσωτερικά εκτελεί **2 concurrent retrieval tasks**.
-Ο agent χρησιμοποιεί τα retrieved movie documents μαζί με τα extracted filters και το rewritten semantic query για να δημιουργήσει την τελική απάντηση.
+## Chroma Vector Database and data
+
+**Chroma** is the semantic retrieval layer of the RAG system.
+
+Embeddings are generated with **OpenAI `text-embedding-3-small`**.
+
+Each vector document contains:
+
+```text
+page_content
+embedding
+metadata
+```
+
+The plots descriptions comes from wiki_movie_plots_deduped.csv dataset which contains the wikipedia descriptions of each movie which is long text with parapgraphs.
+To improve the retrieval i use LLMs to generate summary of each movie and 2 simulated user-query for each movie. The generated simulated query represents a hypothetical user question about reference movie
+So an LLM was used to generate one simulated user query for each movie based on full plot description and a second query based on summary which had also been generated by LLm.
+Summary.
+The simulated query generated by llm could match better with the actual user query or retrieve relevant simulated queries.
+But summary maybe match better with a generic query, as well summary represents the general semantics.
+
+So every movie has several represenations in chroma if it is summary or simulated query or a paragraph.
+This is distinguished by metadata variable `doc_type`.
+
+Depending on its `doc_type`, `page_content` may represent different semantic views of the same movie_id, including:
+
+- summary
+- full plot representation
+- full-plot semantic query
+- summary semantic query
+- paragraph chunk
+
+```text
+ The idea is to retrieve using 2 or more concurrent retrieval tasks, filtered by doc_type. So for example one retrieve tasks brings only summaries filtered on doc_type=summary and the second filtered to brings only queries and chunks.
+ ```
+
+Document metadata can include:
+
+- `movie_id`
+- `title`
+- `year`
+- `director`
+- `genres`
+- `doc_type`
+- genre flags such as `genre_comedy=True`
+
+This design allows the retrieval layer to combine **vector similarity search** with **structured metadata filtering**.
 
 ---
 
 
-H εφαρμογη χρησιμοποιει **conditional LangGraph workflow** αποφασιζοντας δυναμικα αν ενα user request απαιτει semantic retrieval ή όχι. Δηλαδη αν προκειται για ερωτηση ταινιας που χρειαζεται να ψαξει στην chroma ή αν μπορει να απαντηθει μεσω του ιστορικου η προκειται για απλη συζητηση του τυπου ("τι κανεις καλο μου ΑΙ?") να παραξει κατευθειαν την απαντηση "ειμαι ενας βοηθος ταινιων" χωρις να στειλει το query για retrieve
+### Retrieval Logic
 
-Για ερωτησεις πανω σε ταινιες movie-search requests, ο agent ξαναγραφει το query (rewrites query) ωστε να το καθαρισει απο τυγχων θορυβο επικενρωνοντας στο σεναριο που αναφερεται ο χρηστης, extracts structured filters, και στελνει 2 concurrent filtered retrieve tasks to the vector store, και τελειωνει με αξιολογηση του retrieve context παραγωντας την καταλληλη απαντηση σεναριου σχετικα με το query του χρηστη.
+`retrieve_movies` is a single LangGraph node that internally runs **two concurrent retrieval tasks**.
 
-Για ερωτησεις που δεν απαιτουν retrieval, το workflow παραγει κατευειαν το τελικο response.
+For movie-search requests, the agent rewrites the original query to remove conversational noise and focus on the actual semantic intent. It then extracts structured filters and performs concurrent retrieval against the vector store. The retrieved movie context is finally evaluated by the LLM to produce a grounded response aligned with the user's request.
 
-"""
+For requests that do not require retrieval, the workflow bypasses vector search and generates the final response directly.
 
-
-Το graph αποφασίζει αρχικά αν απαιτείται νέα αναζήτηση. Αν χρειάζεται retrieval, το query καθαρίζεται και μετατρέπεται σε πιο κατάλληλη μορφή για semantic search.
-
-Στη συνέχεια εξάγονται πιθανά structured filters, όπως:
+The graph can extract structured filters such as:
 
 - genres
 - excluded genres
 - director
 - year
 
-Η αναζήτηση στη Chroma γίνεται πάνω σε διαφορετικές σημασιολογικές αναπαραστάσεις των ταινιών και τα αποτελέσματα δίνονται σε LLM, το οποίο επιλέγει και εξηγεί τις πιο σχετικές προτάσεις.
+Chroma stores multiple semantic representations of the same movie, allowing retrieval to match the user request against different forms of movie content before the final LLM evaluation.
+
+"""  
+    The default retrieval pass usually returns documents of type semantic_query which is a simulated user query. These documents are LLM generated synthetic queries created for each movie in order to simulate the kinds of questions or descriptions a user might write. This improves semantic matching, because a user query can match a generated query even when the original plot uses different wording.
+
+    However, when the top-k value is relatively small, for example k=20, the default retrieval often returns mostly synthetic query documents and may not retrieve enough real plot or summary context. For that reason, the system performs a second retrieval pass that specifically filters for documents where doc_type = "summary". These summary documents contain condensed plot information and provide more direct context about the actual movie. 
+
+    Retrieved summaries docs aren't always the summaries of retrieved generated queries but the most cosine similar with user's query.  
+    This means that the same movie can be retrieved through both a synthetic query and its plot summary. When that happens, it is a stronger signal that the movie is relevant. The synthetic query matches the user's intent, while the summary provides real story context to support the recommendation.
+
+    Total retrieved docs are 20. 15 documents without extra filter(usuallly generated queries) and 5 documents with filter doc_type = summary context. 
+    
+    After retrieval, another LLM receives all retrieved results, including synthetic queries and summaries, and judges which movies best match the user's request. The final recommendation is therefore not based only on vector similarity, but also on an LLM reasoning step that compares the retrieved evidence and decides which movies should be recommended.
+
+    Search movies in Chroma with two retrieval passes with extra filter run concurrently with asyncio.gather:
+
+    Retrieval passes:
+
+    1. Retrieve 15 documents without doc_type filter.
+       In practice these are usually semantic/synthetic simulated query docs.
+       
+    2. Retrieve 5 documents with filter doc_type="summary" which is the summary of movie plot.
+
+    Normal metadata filters such as genres, excluded_genres, director, and year
+    are still applied to both retrieval passes if user explicit requests.    
+
+    (At this time i dont use doc_type filter for retrieve generated queries because usually are much retrieved first. At this time is an early implementation of my idea but still has significant room for improvement and future expansion. I dont have yet chunks but i could split plots into paragraphs which is too long descriptions (chunk-paragraph might be over than 2000 charachters and in future i could generate more simulated quries for each chunk-paragraph ant to increase a litle bit the temperature 0.2-0.3 with carefully prompting to recognize vibes,mood,emotion not just direct plot description, and also make evidence-reasoning by real plot paragraph generating score response. Additionaly i could generate tags as focus keywords or indicating mood,atmosphere,vibes. Then it might need more complex filter cases or rerank) as example of a future improvement expansion structured output:
+    reference to movie "The matrix":
+
+```json
+[
+  {
+    "synthetic_query": "What movie has a rebel betray his crew because he wants to return to a comfortable fake reality?",
+    "evidence": "Cypher betrays Morpheus to Smith in exchange for a comfortable life back in the Matrix.",
+    "focus_tags": [
+      "betrayal",
+      "conflict",
+      "temptation"
+    ]
+  },
+  {
+    "synthetic_query": "What sci-fi movie is about humans trapped in a simulated world while machines harvest their bodies for energy?",
+    "evidence": "The Matrix is a simulation where harvested humans are trapped and pacified while machines use their bioelectric power.",
+    "focus_tags": [
+      "machine control",
+      "dystopia",
+      "simulation",
+      "worldbuilding"
+    ]
+  }
+]
+```
+
+    Above examples: synthetic_query is simulated query generated by llm for a chunk-paragraph, evidence is the context of each concrete chunk-paragpraph or summary, and focus are tags recognizing by llm.
+    user can asks about psychological temptation, machine control...
+
+    The plots that i managed to find, were too long for my project idea and consists of some long paragraphs and one paragraph migth have over than 2000 charachters. Unhappily these contents focus mainly in plot description and less in atmosphere, mood,vibes, emotionals such as small descriptions in movie websites could be embedded in one vector, which challenging the implementation of my idea (for making only 1 vector for each plot and one synthetic query about this and retrieve atmosphere, or emotionals as usually provided in such small descriptions) .
+"""
 
 ---
 
 ## MySQL Database
 
-Η **MySQL** χρησιμοποιείται για τα δομημένα και relational δεδομένα της εφαρμογής.
+**MySQL** stores the structured relational data used by the application.
 
-Ενδεικτικά αποθηκεύονται:
+Main entities include:
 
 - Users
 - Movies
@@ -198,82 +287,59 @@ H εφαρμογη χρησιμοποιει **conditional LangGraph workflow** �
 - Search History
 - Recommendations
 
-Η επικοινωνία με τη βάση γίνεται μέσω **SQLModel**, το οποίο συνδυάζει SQLAlchemy και Pydantic-style models.
+Database access is implemented with **SQLModel**, combining SQLAlchemy's ORM capabilities with Pydantic-style models and validation.
 
-Το `SearchHistory` χρησιμοποιείται επίσης για μόνιμη αποθήκευση στοιχείων όπως input/output tokens και estimated cost ανά AI request.
-
----
-
-## Chroma Vector Database
-
-Η **Chroma** αποτελεί τη semantic retrieval βάση του RAG συστήματος.
-
-Κάθε vector document περιλαμβάνει:
-
-```text
-page_content
-embedding
-metadata
-```
-
-Το `page_content` μπορεί να περιέχει διαφορετικές μορφές πληροφορίας για την ίδια ταινία, όπως:
-
-- summary
-- full plot / plot representation
-- paragraph chunk
-- full-plot semantic query
-- summary semantic query
-
-Τα embeddings δημιουργούνται με **OpenAI `text-embedding-3-small`**.
-
-Τα metadata περιλαμβάνουν πληροφορίες όπως:
-
-- `movie_id`
-- `title`
-- `year`
-- `director`
-- `genres`
-- `doc_type`
-- genre flags, π.χ. `genre_comedy=True`
-
-Με αυτόν τον τρόπο το σύστημα μπορεί να συνδυάζει **vector similarity search** με **structured metadata filtering**.
+`SearchHistory` also provides persistent tracking of AI usage data such as input/output tokens and estimated cost per request.
 
 ---
 
-## Authentication και RBAC
+## Authentication and RBAC
 
-Η εφαρμογή χρησιμοποιεί **JWT authentication**.
+The application uses **JWT-based authentication**.
 
-Μετά το login, το backend επιστρέφει access token, το οποίο χρησιμοποιείται από το Angular frontend στα protected requests μέσω HTTP interceptor.
+After login, the backend returns an access token that is automatically attached to protected Angular HTTP requests through an interceptor.
 
-Υπάρχουν δύο βασικοί ρόλοι:
+Two main roles are supported:
 
-- **User**: αναζήτηση ταινιών, favorites, AI sessions και recommendations.
-- **Admin**: διαχείριση ταινιών και πρόσβαση σε analytics.
+- **User**: movie search, favorites, AI sessions, and recommendations.
+- **Admin**: movie management and usage analytics.
 
-Το frontend χρησιμοποιεί τις πληροφορίες του token για navigation και διαφορετικό UI, ενώ οι πραγματικοί authorization έλεγχοι γίνονται και στο backend.
+The frontend uses token information to control navigation and role-specific UI, while authorization is also enforced on the backend.
 
 ---
 
 ## Recommendation System
 
-Το recommendation system είναι ξεχωριστό από το RAG movie search και βρίσκεται ακόμη σε πειραματικό στάδιο.
+is not completed yet and also github didnt allow me to upload the entire dataset which includes 7 million records so this (movie_ratings.csv) is a small part of ratings and not works so good.
 
-Όταν ένας χρήστης προσθέτει μια ταινία στα favorites, χρησιμοποιείται για απλοποίηση rating `5.0` και μπορεί να ενεργοποιηθεί background διαδικασία recommendation.
+The recommendation system is separate from the RAG-based movie search and is currently **experimental**.
 
-Η βασική υλοποίηση βασίζεται σε **item-based collaborative filtering**, χρησιμοποιώντας ratings από το **MovieLens 10M Dataset**.
+When a user adds a movie to favorites, the application can treat that preference as a `5.0` rating and use it as input to a background recommendation process for the sake of simplicity.
 
-Μελλοντική επέκταση μπορεί να συνδυάσει collaborative filtering με content-based semantic πληροφορία από τα embeddings και τα chunks των αγαπημένων ταινιών.
+The current recommendation logic is based on **item-based collaborative filtering** using rating data from the **MovieLens 10M Dataset**.
+The idea is to combine collaborative filtering item-based with content-based 
+A future extension could combine collaborative filtering with content-based semantic signals derived from movie embeddings and plot chunks.
+
+```text
+The content-based component is still experimental, but the intended direction of my idea is to build a richer user interest profile from the semantic chunks of their favorite movies. Rather than representing each movie with a single vector, the system could cluster the chunks from a user’s favorites to identify distinct preference areas. For example, one cluster around dark science-fiction themes and another around stories set on isolated islands, without exactly a "dark scifi movie set on isolated island" being among his interests but it would be a perfect candidate. A key idea is that a candidate movie can match multiple dimensions of a user’s preferences through different plot chunks. For example, a sci-fi movie set on an island might contain one chunk strongly related to its science-fiction themes, while another focuses on the isolated island setting. These chunks could therefore fall close to different user-specific interest clusters in the embedding space.
+Instead of just measuring similarity at the whole-movie level, the recommendation score could consider how many chunks from the same movie fall within a defined similarity radius of one or more cluster centroids. A distance threshold would determine whether a chunk is considered relevant to a cluster. Movies whose chunks match several distinct interest clusters —or produce multiple strong matches across them— would receive a higher content-based recommendation score.
+Candidate movies could then be scored according to how many of their chunks fall sufficiently close to these interest clusters, using a distance threshold to determine meaningful matches. A movie whose different chunks align with multiple clusters would receive a stronger content-based score.
+I could use HDBSCAN for clustering which is density base clustering method and noise isolation because i want to recognize the recurring interests of a user for example if a user has many chunks about "isolated island", and many chunks about "artificial inteligence" but only one chunk about "jungle" then it should should have set up two clusters, who one contains chunks related with "isolated island" and the other related "artificial intelligence", isolating "jungle" as outlier. I can reduce dismensionality using PCA or UMAP improving the performance of HDBSCAN clustering and also decreasing the noise keeping the variance explainability.
+This semantic score could then be combined with the existing item-based collaborative filtering score through a weighted hybrid recommendation strategy, for example:
+final_score = 0.5 × collaborative_score + 0.5 × content_score.
+Because meaningful clustering requires enough user preference data, this component would only be activated after the user has accumulated a sufficient number of favorites. Since evaluating candidate movies against multiple user-specific clusters may be computationally expensive, the process would be better suited to asynchronous/background execution.
+```
+
 
 ---
 
-## Δεδομένα
+## Data Sources
 
-Για τα movie plots χρησιμοποιείται dataset βασισμένο στο:
+Movie plot data is based on:
 
 - `wiki_movie_plots_deduped.csv`
 
-Από αυτό χρησιμοποιούνται κυρίως πεδία όπως:
+The application mainly uses fields such as:
 
 ```text
 Year
@@ -283,14 +349,14 @@ Genre
 Plot
 ```
 
-Για το recommendation χρησιμοποιούνται δεδομένα από το **MovieLens 10M Dataset**, τα οποία συνδυάζονται με τα movie plot δεδομένα με βάση τίτλο και έτος.
+Recommendation data comes from the **MovieLens 10M Dataset** and is matched with the movie-plot dataset using title and release year.
 
-Για το vectorstore έχουν επίσης παραχθεί με LLM:
+Additional semantic representations are generated with an LLM, including:
 
 - summaries
 - synthetic semantic queries
 
-ώστε κάθε ταινία να μπορεί να αναζητηθεί μέσα από διαφορετικές semantic representations.
+This allows each movie to be represented in multiple semantic forms inside the vector store.
 
 ---
 
@@ -309,21 +375,19 @@ Plot
 | Infrastructure | Docker, Docker Compose |
 | Package Management | `uv` |
 
-Το backend περιλαμβάνει επίσης custom **Error Handler Middleware**, **Rate Limiter** και **Cost Tracker** για πιο οργανωμένο error handling, περιορισμό requests και παρακολούθηση AI usage.
+The backend also includes a custom **Error Handler Middleware**, **Rate Limiter**, and **Cost Tracker** for consistent API error responses, request throttling, and AI usage monitoring.
 
 ---
 
 ## Docker / Development
 
-Η εφαρμογή μπορεί να εκτελεστεί μέσω **Docker Compose**, μαζί με τη MySQL.
+The application is containerized with **Docker Compose**, including the MySQL service.
 
-Η τρέχουσα Docker λογική είναι κυρίως προσανατολισμένη σε development. Ο source code γίνεται bind mount από το local project directory προς το `/app` του backend container, ώστε οι αλλαγές στον κώδικα να είναι άμεσα διαθέσιμες μέσα στο container χωρίς νέο image build.
+The current Docker setup is primarily development-oriented. The project source directory is bind-mounted into `/app` inside the backend container, allowing local code changes to be reflected inside the container without rebuilding the image.
 
-Το `uv` χρησιμοποιείται για τη διαχείριση των Python dependencies μέσα στο Docker environment.
+Python dependencies are managed with **uv** inside the Docker environment.
 
 ---
-
-
 
 # Running the Project
 
