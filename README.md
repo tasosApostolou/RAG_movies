@@ -213,17 +213,16 @@ The graph can extract structured filters such as:
 
 Chroma stores multiple semantic representations of the same movie, allowing retrieval to match the user request against different forms of movie content before the final LLM evaluation.
 
-"""  
-    The default retrieval pass usually returns documents of type semantic_query which is a simulated user query. These documents are LLM generated synthetic queries created for each movie in order to simulate the kinds of questions or descriptions a user might write. This improves semantic matching, because a user query can match a generated query even when the original plot uses different wording.
+The default retrieval pass usually returns documents of type semantic_query which is a simulated user query. These documents are LLM generated synthetic queries created for each movie in order to simulate the kinds of questions or descriptions a user might write. This improves semantic matching, because a user query can match a generated query even when the original plot uses different wording.
 
-    However, when the top-k value is relatively small, for example k=20, the default retrieval often returns mostly synthetic query documents and may not retrieve enough real plot or summary context. For that reason, the system performs a second retrieval pass that specifically filters for documents where doc_type = "summary". These summary documents contain condensed plot information and provide more direct context about the actual movie. 
+However, when the top-k value is relatively small, for example k=20, the default retrieval often returns mostly synthetic query documents and may not retrieve enough real plot or summary context. For that reason, the system performs a second retrieval pass that specifically filters for documents where doc_type = "summary". These summary documents contain condensed plot information and provide more direct context about the actual movie. 
 
-    Retrieved summaries docs aren't always the summaries of retrieved generated queries but the most cosine similar with user's query.  
-    This means that the same movie can be retrieved through both a synthetic query and its plot summary. When that happens, it is a stronger signal that the movie is relevant. The synthetic query matches the user's intent, while the summary provides real story context to support the recommendation.
+Retrieved summaries docs aren't always the summaries of retrieved generated queries but the most cosine similar with user's query.  
+This means that the same movie can be retrieved through both a synthetic query and its plot summary. When that happens, it is a stronger signal that the movie is relevant. The synthetic query matches the user's intent, while the summary provides real story context to support the recommendation.
 
-    Total retrieved docs are 20. 15 documents without extra filter(usuallly generated queries) and 5 documents with filter doc_type = summary context. 
-    
-    After retrieval, another LLM receives all retrieved results, including synthetic queries and summaries, and judges which movies best match the user's request. The final recommendation is therefore not based only on vector similarity, but also on an LLM reasoning step that compares the retrieved evidence and decides which movies should be recommended.
+Total retrieved docs are 20. 15 documents without extra filter(usuallly generated queries) and 5 documents with filter doc_type = summary context. 
+   
+After retrieval, another LLM receives all retrieved results, including synthetic queries and summaries, and judges which movies best match the user's request. The final recommendation is therefore not based only on vector similarity, but also on an LLM reasoning step that compares the retrieved evidence and decides which movies should be recommended.
 
     Search movies in Chroma with two retrieval passes with extra filter run concurrently with asyncio.gather:
 
@@ -237,7 +236,7 @@ Chroma stores multiple semantic representations of the same movie, allowing retr
     Normal metadata filters such as genres, excluded_genres, director, and year
     are still applied to both retrieval passes if user explicit requests.    
 
-    (At this time i dont use doc_type filter for retrieve generated queries because usually are much retrieved first. At this time is an early implementation of my idea but still has significant room for improvement and future expansion. I dont have yet chunks but i could split plots into paragraphs which is too long descriptions (chunk-paragraph might be over than 2000 charachters and in future i could generate more simulated quries for each chunk-paragraph ant to increase a litle bit the temperature 0.2-0.3 with carefully prompting to recognize vibes,mood,emotion not just direct plot description, and also make evidence-reasoning by real plot paragraph generating score response. Additionaly i could generate tags as focus keywords or indicating mood,atmosphere,vibes. Then it might need more complex filter cases or rerank) as example of a future improvement expansion structured output:
+At this time i dont use doc_type filter for retrieve generated queries because usually are much retrieved first. At this time is an early implementation of my idea but still has significant room for improvement and future expansion. I dont have yet chunks but i could split plots into paragraphs which is too long descriptions (chunk-paragraph might be over than 2000 charachters and in future i could generate more simulated quries for each chunk-paragraph ant to increase a litle bit the temperature 0.2-0.3 with carefully prompting to recognize vibes,mood,emotion not just direct plot description, and also make evidence-reasoning by real plot paragraph generating score response. Additionaly i could generate tags as focus keywords or indicating mood,atmosphere,vibes. Then it might need more complex filter cases or rerank) as example of a future improvement expansion structured output:
     reference to movie "The matrix":
 
 ```json
